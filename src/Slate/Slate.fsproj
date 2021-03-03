@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5</TargetFramework>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <RootNamespace>Slate</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="index.html" />
+    <None Include="paket.references" />
+    <Compile Include="src\Slate\Types.fs" />
+    <Compile Include="src\Slate\Operations.fs" />
+    <Compile Include="src\Slate\Node.fs" />
+    <Compile Include="src\Slate\Text.fs" />
+    <Compile Include="src\Slate\Editor.fs" />
+    <Compile Include="src\Slate\Transforms.fs" />
+    <Compile Include="src\Slate\Element.fs" />
+    <Compile Include="src\Slate\Slate.fs" />
+    <Compile Include="src\Slate\Range.fs" />
+    <Compile Include="src\Slate\FSharpExtended\NodeEx.fs" />
+    <Compile Include="src\Slate\FSharpExtended\EditorEx.fs" />
+    <Compile Include="src\Styles.fs" />
+    <Compile Include="src\Icons.fs" />
+    <Compile Include="src\Examples\BasicExample.fs" />
+    <Compile Include="src\ErrorBoundary.fs" />
+    <Compile Include="src\Layout.fs" />
+    <Compile Include="src/Program.fs" />
+  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>

@@ -1,0 +1,6 @@
+group Slate
+    Feliz
+
+group SlateExample
+    Feliz.Router
+    Zanaptak.TypedCssClasses

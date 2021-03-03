@@ -1,0 +1,28 @@
+version 5.251.0
+
+group Slate
+    source https://api.nuget.org/v3/index.json
+    framework: net5.0
+    generate_load_scripts: true
+
+    nuget Feliz
+    nuget Fable.Core
+    nuget FSharp.Core
+    nuget Fable.React
+
+group SlateExample
+    source https://api.nuget.org/v3/index.json
+    framework: net5.0
+    generate_load_scripts: true
+
+    nuget Feliz.Router
+    nuget Zanaptak.TypedCssClasses 0.2.0
+
+group Build
+    source https://api.nuget.org/v3/index.json
+    framework netstandard2.0
+
+    nuget Fake.Core.ReleaseNotes
+    nuget Fake.Core.Target
+    nuget Fake.DotNet.Cli
+    nuget Paket.Core == 6.0.0-beta8
