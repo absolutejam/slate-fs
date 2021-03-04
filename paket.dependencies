@@ -17,6 +17,7 @@ group SlateExample
 
     nuget Feliz.Router
     nuget Zanaptak.TypedCssClasses 0.2.0
+    nuget FsToolkit.ErrorHandling
 
 group Build
     source https://api.nuget.org/v3/index.json

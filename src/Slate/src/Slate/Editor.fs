@@ -42,7 +42,7 @@ module Internal  =
 
         type NodesOptions =
             abstract member at: Location option
-            abstract member match': NodeMatch option
+            abstract member match': (INode -> bool) option
             abstract member mode: Mode option
             abstract member universal: bool option
             abstract member reverse: bool option
@@ -175,7 +175,7 @@ type Editor =
         (
             editor: IEditor,
             ?at: Location,
-            ?match': NodeMatch,
+            ?match': INode -> bool,
             ?mode: NodesMode,
             ?universal: bool,
             ?reverse: bool,

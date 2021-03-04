@@ -11,6 +11,9 @@ let createEditor (): IEditor = jsNative
 [<Import("withReact", from="slate-react")>]
 let withReact (editor: IEditor) : IEditor = jsNative
 
+[<Import("withHistory", from="slate-history")>]
+let withHistory (editor: IEditor) : IEditor = jsNative
+
 [<Import("useSlate", from="slate-react")>]
 let useSlate () : IEditor = jsNative
 

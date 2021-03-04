@@ -23,26 +23,38 @@ module NodeEx =
         then Some (node :?> IEditor)
         else None
 
-    let ifElement (mapper: IElement -> unit) (node: obj) =
-        match node with
-        | Element element -> mapper element
-        | _ -> ()
-
     let mapElement (mapper: IElement -> INode) (node: INode) =
         match node with
         | Element element -> mapper element
         | _ -> node
+
+    let ifElement (mapper: IElement -> unit) (node: obj) =
+        match node with
+        | Element element -> mapper element
+        | _ -> ()
 
     let mapEditor (mapper: IEditor -> INode) (node: INode) =
         match node with
         | Editor editor -> mapper editor
         | _ -> node
 
+    let ifEditor (mapper: IEditor -> unit) (node: INode) =
+        match node with
+        | Editor editor -> mapper editor
+        | _ -> ()
+
     let mapText (mapper: IText -> INode) (node: INode) =
         match node with
         | Text text -> mapper text
         | _ -> node
 
+    let ifText (mapper: IText -> unit) (node: INode) =
+        match node with
+        | Text text -> mapper text
+        | _ -> ()
+
     let textNode (text: string) = unbox<IText> {| text = text |}
     let elementNode (children: INode[]) = unbox<IElement> {| children = children |}
 
+    let withElementFirstChild (firstChildFun: INode -> unit) (node: IElement) =
+        node |> ifElement (fun el -> firstChildFun el.children.[0])

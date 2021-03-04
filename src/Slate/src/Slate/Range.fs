@@ -24,7 +24,7 @@ module Internal =
         abstract member isRange:      value: obj -> bool
         abstract member points:       range: IRange -> PointEntry seq // TODO: Generator<...>
         abstract member start:        range: IRange -> IPoint
-        abstract member transform:    range: IRange * op: Operation * ?options: TransformOptions -> IRange option
+        abstract member transform:    range: IRange * op: IOperation * ?options: TransformOptions -> IRange option
 
     let rangeInterface: Range = import "Range" "slate"
 

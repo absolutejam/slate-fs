@@ -20,3 +20,6 @@ volumes/*
 **tailwind-generated.css
 *.js.map
 **out/
+.run
+.vscode
+.paket

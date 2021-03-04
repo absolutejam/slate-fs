@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build.fsx = build.fsx
 		paket.dependencies = paket.dependencies
 		README.md = README.md
+		src\Slate\tailwind.config.js = src\Slate\tailwind.config.js
 	EndProjectSection
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Slate", "src\Slate\Slate.fsproj", "{5DB3E38C-7659-42A8-84EC-7895C196979D}"

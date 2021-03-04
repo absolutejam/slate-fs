@@ -19,8 +19,10 @@
     <Compile Include="src\Slate\Range.fs" />
     <Compile Include="src\Slate\FSharpExtended\NodeEx.fs" />
     <Compile Include="src\Slate\FSharpExtended\EditorEx.fs" />
+    <Compile Include="src\Slate\FSharpExtended\OperationsEx.fs" />
     <Compile Include="src\Styles.fs" />
     <Compile Include="src\Icons.fs" />
+    <Compile Include="src\Elements.fs" />
     <Compile Include="src\Examples\BasicExample.fs" />
     <Compile Include="src\ErrorBoundary.fs" />
     <Compile Include="src\Layout.fs" />

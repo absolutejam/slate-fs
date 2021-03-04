@@ -17,14 +17,14 @@ type NodeProps =
 
     (* Editor *)
     static member selection (selection: IRange option) = nameof selection, box selection
-    static member operations (operation: Operation[]) = nameof operation, box operation
+    static member operations (operation: IOperation[]) = nameof operation, box operation
     static member marks (marks: Map<string, obj>) = nameof marks, box marks
     static member isInline (isInline: IElement -> bool) = nameof isInline, box isInline
     static member isVoid (isVoid: IElement -> bool) = nameof isVoid, box isVoid
     static member normalizeNode (normalizeNode: NodeEntry<INode> -> unit) = nameof normalizeNode, box normalizeNode
     static member onChange (onChange: unit -> unit) = nameof onChange, box onChange
     static member addMark (addMark: (string * obj) -> unit) = nameof addMark, box addMark
-    static member apply (apply: Operation -> unit) = nameof apply, box apply
+    static member apply (apply: IOperation -> unit) = nameof apply, box apply
     static member deleteBackward (deleteBackward: Unit -> unit) = nameof deleteBackward, box deleteBackward
     static member deleteForward (deleteForward: Unit -> unit) = nameof deleteForward, box deleteForward
     static member deleteFragment (deleteFragment: unit -> unit) = nameof deleteFragment, box deleteFragment
@@ -65,14 +65,14 @@ module Internal =
             abstract member children: INode[]
             abstract member text: string
             abstract member selection: IRange
-            abstract member operations: Operation[]
+            abstract member operations: IOperation[]
             abstract member marks: Map<string, obj>
             abstract member isInline: IElement -> bool
             abstract member isVoid: IElement -> bool
             abstract member normalizeNode: NodeEntry<INode> -> unit
             abstract member onChange: unit -> unit
             abstract member addMark: (string * obj) -> unit
-            abstract member apply: Operation -> unit
+            abstract member apply: IOperation -> unit
             abstract member deleteBackward: Unit -> unit
             abstract member deleteForward: Unit -> unit
             abstract member deleteFragment: unit -> unit

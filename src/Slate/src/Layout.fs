@@ -1,7 +1,10 @@
 module SlateExample.Layout
 
 open Feliz
+open Slate.Types
+
 open SlateExample.Examples
+open SlateExample.Elements
 open SlateExample.ErrorBoundary
 
 let header =
@@ -21,20 +24,45 @@ let header =
         ]
     ]
 
-
 [<ReactComponent>]
 let ErrorComponent () =
     Html.div [
         prop.children [ Html.text "It's gone bad" ]
     ]
 
-let body =
+[<ReactComponent>]
+let Output (props: {| nodes: INode[] |}) =
+    Html.div [
+        prop.classes [ tw.``flex``; tw.``text-xs`` ]
+        prop.children [
+            Html.pre [
+                prop.classes [ tw.``flex``; tw.``p-4`` ]
+                prop.children [
+                    Html.text (Fable.Core.JS.JSON.stringify (props.nodes, space=4))
+                ]
+            ]
+        ]
+    ]
+
+
+[<ReactComponent>]
+let Body () =
+    let initialState : INode[] =
+        [|
+            Elements.title "Welcome!"
+            Elements.paragraph "Here is some starting text..."
+        |]
+
+    let nodes, setNodes = React.useState initialState
+
     Html.div [
         prop.classes [
-            tw.``flex``; tw.``flex-col``; tw.``container``; tw.``m-auto``; tw.``p-10``
+            tw.``flex``; tw.``flex-col``; tw.``space-y-4``; tw.``container``; tw.``m-auto``; tw.``items-center``; tw.``p-10``
         ]
         prop.children [
-            BasicExample.Example ()
+            BasicExample.Example {| nodeState = (nodes, setNodes) |}
+            Output {| nodes = nodes |}
+
 //            (ErrorBoundary {
 //                Inner = BasicExample.Example ()
 //                ErrorComponent = ErrorComponent ()

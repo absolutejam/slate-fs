@@ -11,7 +11,7 @@ type Number = int
 type IPath = Number[]
 
 type IPoint =
-    abstract member point: IPath
+    abstract member path: IPath
     abstract member offset: Number
 
 module Point =
@@ -30,6 +30,10 @@ type PointEntry = IPoint * PointAnchor
 type IRange =
     abstract member anchor: IPoint
     abstract member focus: IPoint
+
+type IPartialRange =
+    abstract member anchor: IPoint option
+    abstract member focus: IPoint option
 
 module Range =
     let Of anchor focus =
@@ -62,27 +66,29 @@ and INode = interface end
 
 type NodeMatch = INode -> IPath -> bool
 
+and IOperation = abstract member ``type``: string
+
 and IEditor =
     inherit INode
     abstract member children: INode[] with get, set
-    abstract member selection: IRange option
-    abstract member operations: Operation[]
+    abstract member selection: IRange option with get, set
+    abstract member operations: IOperation[] with get, set
     abstract member marks: Map<string, obj> // TODO: ??
-    abstract member isInline: IElement -> bool
-    abstract member isVoid: IElement -> bool
+    abstract member isInline: (IElement -> bool) with get, set
+    abstract member isVoid: (IElement -> bool) with get, set
     abstract member normalizeNode: (NodeEntry<INode> -> unit) with get, set
-    abstract member onChange: unit -> unit
-    abstract member addMark: (string * obj) -> unit
-    abstract member apply: Operation -> unit
-    abstract member deleteBackward: Unit -> unit
-    abstract member deleteForward: Unit -> unit
-    abstract member deleteFragment: unit -> unit
-    abstract member getFragment: unit -> Descendant []
-    abstract member insertBreak: unit -> unit
-    abstract member insertFragment: Node [] -> unit
-    abstract member insertNode: Node -> unit
-    abstract member insertText: string -> unit
-    abstract member removeMark: string -> unit
+    abstract member onChange: (unit -> unit) with get, set
+    abstract member addMark: ((string * obj) -> unit) with get, set
+    abstract member apply: (IOperation -> unit) with get, set
+    abstract member deleteBackward: (Unit -> unit) with get, set
+    abstract member deleteForward: (Unit -> unit) with get, set
+    abstract member deleteFragment: (unit -> unit) with get, set
+    abstract member getFragment: (unit -> Descendant []) with get, set
+    abstract member insertBreak: (unit -> unit) with get, set
+    abstract member insertFragment: (Node [] -> unit) with get, set
+    abstract member insertNode: (Node -> unit) with get, set
+    abstract member insertText: (string -> unit) with get, set
+    abstract member removeMark: (string -> unit) with get, set
 
 and IElement =
     inherit INode
@@ -106,94 +112,6 @@ and [<RequireQualifiedAccess; Erase>]
 and NodeEntry<'t> = 't * IPath
 
 and [<StringEnum>] Unit = Character | Word | Line | Block
-
-and InsertNodeOperation =
-     abstract member ``type``: string
-     abstract member path: IPath
-     abstract member node: INode
-
-and InsertTextOperation =
-    abstract member ``type``: string // insert_text
-    abstract member path: IPath
-    abstract member offset: Number
-    abstract member text: string
-
-and MergeNodeOperation =
-    abstract member ``type``: string // merge_node
-    abstract member path: IPath
-    abstract member position: Number
-    abstract member properties: Map<string, obj>
-
-and MoveNodeOperation =
-    abstract member ``type``: string // move_node
-    abstract member path: IPath
-    abstract member newPath: IPath
-
-and RemoveNodeOperation =
-    abstract member ``type``: string // remove_node
-    abstract member path: IPath
-    abstract member node: INode
-
-and RemoveTextOperation =
-    abstract member ``type``: string // remove_text
-    abstract member path: IPath
-    abstract member offset: Number
-    abstract member text: string
-
-and SetNodeOperation =
-    abstract member ``type``: string // set_node
-    abstract member path: IPath
-    abstract member properties: Map<string, obj>
-    abstract member newProperties: Map<string, obj>
-
-and SetSelectionOperationNewPropertiesOptions =
-    abstract member ``type``: string
-    abstract member newProperties: IRange
-
-and SetSelectionOperationPartialOptions =
-    abstract member ``type``: string
-    abstract member properties: Map<string, obj>
-    abstract member newProperties: Map<string, obj>
-
-and SetSelectionOperationPropertiesOptions =
-    abstract member ``type``: string
-    abstract member properties: Map<string, obj>
-
-and [<RequireQualifiedAccess; Erase>]
-    SetSelectionOperation =
-    | NewProperties of SetSelectionOperationNewPropertiesOptions
-    | Partial       of SetSelectionOperationPartialOptions
-    | Properties    of SetSelectionOperationPropertiesOptions
-
-and SplitNodeOperation =
-    abstract member ``type``: string // split_node
-    abstract member path: IPath
-    abstract member position: Number
-    abstract member properties: Map<string, obj>
-
-and [<RequireQualifiedAccess; Erase>]
-    NodeOperation =
-    | InsertNodeOperation of InsertNodeOperation
-    | MergeNodeOperation  of MergeNodeOperation
-    | MoveNodeOperation   of MoveNodeOperation
-    | RemoveNodeOperation of RemoveNodeOperation
-    | SetNodeOperation    of SetNodeOperation
-    | SplitNodeOperation  of SplitNodeOperation
-
-and [<RequireQualifiedAccess; Erase>]
-    SelectionOperation =
-    | SelectionOperation of SetSelectionOperation
-
-and [<RequireQualifiedAccess; Erase>]
-    TextOperation =
-    | InsertTextOperation of InsertTextOperation
-    | RemoveTextOperation of RemoveTextOperation
-
-and [<RequireQualifiedAccess; Erase>]
-    Operation =
-    | NodeOperation      of NodeOperation
-    | SelectionOperation of SelectionOperation
-    | TextOperation      of TextOperation
 
 
 /// Attributes required by `Element`s for rendering
