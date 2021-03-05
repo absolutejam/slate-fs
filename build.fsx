@@ -17,7 +17,7 @@ module Targets =
 
     Target.initEnvironment ()
 
-    let clientPath = Path.getFullName "./src/Slate"
+    let clientPath = Path.getFullName "./src/SlateExample"
 
     module Launch =
         let client = async {

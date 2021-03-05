@@ -26,8 +26,9 @@ type ParagraphElement =
 
 type TitleElement =
     {
-        children:    INode[]
-        placeholder: bool
+        children:        INode[]
+        isPlaceholder:   bool
+        placeholderText: string option
     }
     static member elementType = "title"
     interface IElement with
@@ -35,51 +36,57 @@ type TitleElement =
         member this.children = this.children
 
 module Elements =
-    let (|SectionElement|_|) (element: IElement) =
-        if (!!element.elementType) = SectionElement.elementType
-        then Some (element :?> SectionElement)
-        else None
+    let (|SectionElement|_|) (node: INode) =
+        Nodex.(|Element|_|) node |> Option.bind (fun element ->
+            if (!!element.elementType) = SectionElement.elementType
+            then Some (element :?> SectionElement)
+            else None
+        )
 
-    let (|ParagraphElement|_|) (element: IElement) =
-        if (!!element.elementType) = ParagraphElement.elementType
-        then Some (element :?> ParagraphElement)
-        else None
+    let (|ParagraphElement|_|) (node: INode) =
+        Nodex.(|Element|_|) node |> Option.bind (fun element ->
+            if (!!element.elementType) = ParagraphElement.elementType
+            then Some (element :?> ParagraphElement)
+            else None
+        )
 
-    let (|TitleElement|_|) (element: IElement) =
-        if (!!element.elementType) = TitleElement.elementType
-        then Some (element :?> TitleElement)
-        else None
+    let (|TitleElement|_|) (node: INode) =
+        Nodex.(|Element|_|) node |> Option.bind (fun element ->
+            if (!!element.elementType) = TitleElement.elementType
+            then Some (element :?> TitleElement)
+            else None
+        )
 
-    let isSectionElement (element: IElement)   = (|SectionElement|_|) element |> Option.isSome
-    let isParagraphElement (element: IElement) = (|ParagraphElement|_|) element |> Option.isSome
-    let isTitleElement (element: IElement)     = (|TitleElement|_|) element |> Option.isSome
+    let isSectionElement (node: INode)   = (|SectionElement|_|) node |> Option.isSome
+    let isParagraphElement (node: INode) = (|ParagraphElement|_|) node |> Option.isSome
+    let isTitleElement (node: INode)     = (|TitleElement|_|) node |> Option.isSome
 
-    let mapSectionElement (mapper: _ -> IElement) (element: IElement) =
-        match element with
-        | SectionElement sectionElement -> mapper sectionElement :> INode
-        | _ -> element :> INode
+    let mapSectionElement (mapper: _ -> IElement) (node: IElement) =
+        match node with
+        | SectionElement sectionElement -> mapper sectionElement
+        | _ -> node
 
-    let ifSectionElement (mapper: _ -> unit) (element: IElement) =
+    let ifSectionElement (mapper: _ -> unit) (element: INode) =
         match element with
         | SectionElement sectionElement -> mapper sectionElement
         | _ -> ()
 
     let mapParagraphElement (mapper: _ -> IElement) (element: IElement) =
         match element with
-        | ParagraphElement paragraphElement -> mapper paragraphElement :> INode
-        | _ -> element :> INode
+        | ParagraphElement paragraphElement -> mapper paragraphElement
+        | _ -> element
 
-    let ifParagraphElement (mapper: _ -> unit) (element: IElement) =
-        match element with
+    let ifParagraphElement (mapper: _ -> unit) (node: INode) =
+        match node with
         | ParagraphElement paragraphElement -> mapper paragraphElement
         | _ -> ()
 
-    let mapTitleElement (mapper: _ -> IElement) (element: IElement) =
-        match element with
-        | TitleElement titleElement -> mapper titleElement :> INode
-        | _ -> element :> INode
+    let mapTitleElement (mapper: _ -> IElement) (node: IElement) =
+        match node with
+        | TitleElement titleElement -> mapper titleElement
+        | _ -> node
 
-    let ifTitleElement (mapper: _ -> unit) (element: IElement) =
+    let ifTitleElement (mapper: _ -> unit) (element: INode) =
         match element with
         | TitleElement titleElement -> mapper titleElement
         | _ -> ()
@@ -94,24 +101,26 @@ module Elements =
     let title (title: string) =
         unbox<IElement>
             {|
-                elementType = TitleElement.elementType
-                children    = [| NodeEx.textNode title |]
-                placeholder = false
+                elementType     = TitleElement.elementType
+                children        = [| Nodex.textNode title |]
+                isPlaceholder   = false
+                placeholderText = None
             |}
 
-    let titlePlaceholder (title: string) =
+    let titleWithPlaceholder (title: string) (placeholder: string) =
         unbox<IElement>
             {|
-                elementType = TitleElement.elementType
-                children    = [| NodeEx.textNode title |]
-                placeholder = true
+                elementType     = TitleElement.elementType
+                children        = [| Nodex.textNode title |]
+                isPlaceholder   = false
+                placeholderText = Some placeholder
             |}
 
     let paragraph (paragraph: string) =
         unbox<IElement>
             {|
                 elementType = ParagraphElement.elementType
-                children    = [| NodeEx.textNode paragraph |]
+                children    = [| Nodex.textNode paragraph |]
             |}
 
 
@@ -129,15 +138,14 @@ module ElementComponents =
     [<ReactComponent>]
     let TitleElement (props: RenderElementProps) =
         let el = props.element :?> TitleElement
+
         Html.h2 [
             yield! splatElementAttributes props.attributes
             prop.classes [
                 tw.``text-xl``; tw.``font-medium``; tw.``pt-2``; tw.``pb-4``
-                if el.placeholder then yield! [ tw.``italic``; tw.``text-gray-2`` ]
+                if el.isPlaceholder then yield! [ tw.``italic``; tw.``text-gray-2`` ]
             ]
-            prop.children [
-                props.children
-            ]
+            prop.children [ props.children ]
         ]
 
     [<ReactComponent>]

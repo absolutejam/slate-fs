@@ -14,6 +14,10 @@ type IPoint =
     abstract member path: IPath
     abstract member offset: Number
 
+type IPartialPoint =
+    abstract member path: IPath option
+    abstract member offset: Number option
+
 module Point =
     let Of (point: IPath) (offset: Number) =
         unbox<IPoint> {| point = point; offset = offset |}
@@ -22,6 +26,7 @@ type [<StringEnum; RequireQualifiedAccess>] PointAnchor = Anchor | Focus
 type [<StringEnum; RequireQualifiedAccess>] Affinity = Forward | Backward
 type [<StringEnum; RequireQualifiedAccess>] RangeAffinity = Forward | Backward | Outward | Inward
 type [<StringEnum; RequireQualifiedAccess>] Edge = Start | End
+type [<StringEnum; RequireQualifiedAccess>] SelectionEdge = Anchor | Focus | Start | End
 type [<StringEnum; RequireQualifiedAccess>] Mode = Highest | Lowest
 type [<StringEnum; RequireQualifiedAccess>] NodesMode = Highest | Lowest | All
 
@@ -103,15 +108,18 @@ and [<RequireQualifiedAccess; Erase>]
     Ancestor =
     | Editor of IEditor
     | Element of IElement
+    interface INode
 
 and [<RequireQualifiedAccess; Erase>]
     Descendant =
     | Element of IElement
-    | Text of Text
+    | Text of IText
+    interface INode
 
 and NodeEntry<'t> = 't * IPath
 
 and [<StringEnum>] Unit = Character | Word | Line | Block
+and [<StringEnum>] PointerUnit = Offset | Character | Word | Line
 
 
 /// Attributes required by `Element`s for rendering

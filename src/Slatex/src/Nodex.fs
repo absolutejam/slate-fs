@@ -7,7 +7,7 @@ type private Text'    = Slate.Text.Text
 type private Editor'  = Slate.Editor.Editor
 type private Element' = Slate.Element.Element
 
-module NodeEx =
+module Nodex =
     let (|Text|_|) (node: obj) =
         if Text'.isText node
         then Some (node :?> IText)
@@ -56,5 +56,5 @@ module NodeEx =
     let textNode (text: string) = unbox<IText> {| text = text |}
     let elementNode (children: INode[]) = unbox<IElement> {| children = children |}
 
-    let withElementFirstChild (firstChildFun: INode -> unit) (node: IElement) =
-        node |> ifElement (fun el -> firstChildFun el.children.[0])
+    let withElementFirstTextChild (firstChildFun: IText -> unit) (node: INode) =
+        node |> ifElement (fun el -> el.children.[0] |> ifText firstChildFun)

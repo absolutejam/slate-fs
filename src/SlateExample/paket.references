@@ -3,5 +3,6 @@ group Slate
 
 group SlateExample
     Feliz.Router
+    # Fable.Extras
     FsToolkit.ErrorHandling
     Zanaptak.TypedCssClasses

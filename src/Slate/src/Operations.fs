@@ -53,7 +53,7 @@ module OperationTypes =
         inherit IOperation
         abstract member path: IPath
         abstract member position: Number
-        abstract member properties: (string * obj) seq
+        abstract member properties: obj
 
 module Internal =
     type Operations =

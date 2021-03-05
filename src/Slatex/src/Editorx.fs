@@ -6,7 +6,7 @@ open Slate.Types
 open Slate.Editor
 
 /// Methods for transforming an `IEditor` in a functional way
-type EditorEx =
+type Editorx =
     static member updateChildren (updateFun: INode -> INode) (editor: IEditor) =
         editor.children <- editor.children |> Array.map updateFun
 
@@ -24,12 +24,12 @@ type EditorEx =
 
     static member updateElements (updateFun: IElement -> INode) (editor: IEditor)  =
         Editor.withoutNormalizing (editor, fun () ->
-            editor.children <- editor.children |> Array.map (NodeEx.mapElement updateFun)
+            editor.children <- editor.children |> Array.map (Nodex.mapElement updateFun)
         )
 
     static member updateEditors (updateFun: IEditor -> INode) (editor: IEditor)  =
-        editor.children <- editor.children |> Array.map (NodeEx.mapEditor updateFun)
+        editor.children <- editor.children |> Array.map (Nodex.mapEditor updateFun)
 
     static member updateTexts (updateFun: IText -> INode) (editor: IEditor)  =
-        editor.children <- editor.children |> Array.map (NodeEx.mapText updateFun)
+        editor.children <- editor.children |> Array.map (Nodex.mapText updateFun)
 

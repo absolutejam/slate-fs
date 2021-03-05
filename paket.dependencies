@@ -16,6 +16,7 @@ group SlateExample
     generate_load_scripts: true
 
     nuget Feliz.Router
+    # nuget Fable.Extras == 0.4.0
     nuget Zanaptak.TypedCssClasses 0.2.0
     nuget FsToolkit.ErrorHandling
 

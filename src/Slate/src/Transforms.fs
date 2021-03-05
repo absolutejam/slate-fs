@@ -45,6 +45,16 @@ module Internal =
             abstract member hanging: bool option
             abstract member voids: bool option
 
+        type InsertTextParams =
+            abstract member at: Location option
+            abstract member voids: bool option
+
+        type MoveParams =
+            abstract member distance: Number option
+            abstract member unit: PointerUnit option
+            abstract member reverse: bool option
+            abstract member edge: SelectionEdge option
+
         type SetNodesParams =
             abstract member at: Location option
             abstract member match': NodeMatch
@@ -52,6 +62,9 @@ module Internal =
             abstract member hanging: bool option
             abstract member split: bool option
             abstract member voids: bool option
+
+        type SetPointParams =
+            abstract member edge: SelectionEdge option
 
         type InsertNodesParams =
             abstract member at: Location option
@@ -86,9 +99,14 @@ module Internal =
     open TransformsTypes
 
     type Transforms =
-        abstract member delete:      editor: IEditor * ?options: DeleteParams -> unit
-        abstract member setNodes:    editor: IEditor * props: obj * ?options: SetNodesParams -> unit
-        abstract member insertNodes: editor: IEditor * nodes: INode[] * ?options: InsertNodesParams -> unit
+        abstract member delete:       editor: IEditor * ?options: DeleteParams -> unit
+        abstract member deleteText:   editor: IEditor * ?options: DeleteParams -> unit
+        abstract member insertText:   editor: IEditor * text: string * ?options: InsertTextParams -> unit
+        abstract member move:         editor: IEditor * ?options: MoveParams -> unit
+        abstract member setNodes:     editor: IEditor * props: obj * ?options: SetNodesParams -> unit
+        abstract member select:       editor: IEditor * target: Location -> unit
+        abstract member setSelection: editor: IEditor * props: IPartialPoint * ?options: SetPointParams -> unit
+        abstract member insertNodes:  editor: IEditor * nodes: INode[] * ?options: InsertNodesParams -> unit
 
     let transformsInterface : Transforms = import "Transforms" "slate"
 
@@ -114,6 +132,36 @@ type Transforms =
               voids = voids
             |}
         Internal.transformsInterface.delete (editor, unbox<Internal.TransformsTypes.DeleteParams> options)
+
+    static member deleteText
+        (
+            editor: IEditor,
+            ?at: Location,
+            ?distance: int,
+            ?unit: Unit,
+            ?reverse: bool,
+            ?hanging: bool,
+            ?voids: bool
+        )
+        =
+        let options =
+            {|
+              at = at
+              distance = distance
+              ``unit`` = unit
+              reverse = reverse
+              hanging = hanging
+              voids = voids
+            |}
+        Internal.transformsInterface.deleteText (editor, unbox<Internal.TransformsTypes.DeleteParams> options)
+
+    static member insertText (editor: IEditor, text: string, ?at: Location, ?voids: bool) =
+        let options = {| at = at; voids = voids |}
+        Internal.transformsInterface.insertText (editor, text, unbox<Internal.TransformsTypes.InsertTextParams> options)
+
+    static member move (editor: IEditor, ?distance: Number, ?unit: PointerUnit, ?reverse: bool, ?edge: SelectionEdge) =
+        let options = {| distance = distance; unit = unit; reverse = reverse; edge = edge |}
+        Internal.transformsInterface.move (editor, unbox<Internal.TransformsTypes.MoveParams> options)
 
     static member setNodes
         (
@@ -161,3 +209,15 @@ type Transforms =
         =
         let options = {| at = at; ``match`` = match'; mode = mode; hanging = hanging; split = split; voids = voids |}
         Internal.transformsInterface.insertNodes (editor, nodes, unbox<Internal.TransformsTypes.InsertNodesParams> options)
+
+    static member select (editor: IEditor, target: Location) =
+        Internal.transformsInterface.select (editor, target)
+
+    static member setPoint (editor: IEditor, ?path: IPath, ?offset: Number, ?edge: SelectionEdge) =
+        let partialPoint = {| path = path; offset = offset |}
+        let options = {| edge = edge |}
+        Internal.transformsInterface.setSelection (
+            editor,
+            unbox<IPartialPoint> partialPoint,
+            unbox<Internal.TransformsTypes.SetPointParams> options
+        )

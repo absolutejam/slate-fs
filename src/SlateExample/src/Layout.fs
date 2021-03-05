@@ -49,7 +49,7 @@ let Output (props: {| nodes: INode[] |}) =
 let Body () =
     let initialState : INode[] =
         [|
-            Elements.title "Welcome!"
+            Elements.titleWithPlaceholder "Welcome!" "Title..."
             Elements.paragraph "Here is some starting text..."
         |]
 

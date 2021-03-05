@@ -51,11 +51,11 @@ module Internal  =
         type NormalizeOptions = abstract member force: bool option
 
         type ParentOptions =
-            abstract member depth: int option
+            abstract member depth: Number option
             abstract member edge: Edge option
 
         type PathOptions =
-            abstract member depth: int option
+            abstract member depth: Number option
             abstract member edge: Edge option
 
         type PathRefOptions = abstract member affinity: Affinity option
@@ -171,6 +171,10 @@ type Editor =
     static member isEditor (value: obj): bool =
         Internal.editorInterface.isEditor (value)
 
+    static member node (editor: IEditor, at: Location, ?depth: int, ?edge: Edge) =
+        let options = {| depth = depth; edge = edge |}
+        Internal.editorInterface.node (editor, at, unbox<Internal.EditorTypes.NodeOptions> options)
+
     static member nodes
         (
             editor: IEditor,
@@ -184,6 +188,10 @@ type Editor =
         =
         let options = {| at = at; ``match`` = match'; mode = mode; universal = universal; reverse = reverse; voids = voids |}
         Internal.editorInterface.nodes (editor, unbox<Internal.EditorTypes.NodesOptions> options)
+
+    static member parent (editor: IEditor, at: Location, ?depth: Number, ?edge: Edge) =
+        let options = {| depth = depth; edge = edge |}
+        Internal.editorInterface.parent (editor, at, unbox<Internal.EditorTypes.ParentOptions> options)
 
     static member point (editor: IEditor, at: Location, ?edge: Edge) =
         let options = unbox<Internal.EditorTypes.PointOptions> {| edge = edge |}

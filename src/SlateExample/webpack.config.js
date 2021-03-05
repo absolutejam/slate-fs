@@ -22,7 +22,7 @@ var CONFIG = {
     indexHtmlTemplate: 'index.html',
     fsharpEntry: 'src/Program.fs.js',
     cssEntry: 'css/tailwind-source.css',
-    outputDir: 'out',
+    // outputDir: 'out',
     assetsDir: 'public',
     devServerPort: 9091,
     // When using webpack-dev-server, you may need to redirect some calls
@@ -85,10 +85,13 @@ module.exports = {
     },
     // Add a hash to the output file name in production
     // to prevent browser caching if code changes
-    output: {
-        path: resolve(CONFIG.outputDir),
-        filename: isProduction ? '[name].[hash].js' : '[name].js'
-    },
+    ...(CONFIG.outputDir) ?
+        {
+            output: {
+                path: resolve(CONFIG.outputDir),
+                filename: isProduction ? '[name].[hash].js' : '[name].js'
+            },
+        } : {},
     mode: isProduction ? 'production' : 'development',
     devtool: isProduction ? "source-map" : "eval-source-map",
     optimization: {

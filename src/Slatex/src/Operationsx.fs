@@ -1,10 +1,10 @@
-module Slate.FSharpExtended.OperationsEx
+module Slate.FSharpExtended
 
 open Slate.Types
 open Fable.Core.JsInterop
 open Slate.Operations.OperationTypes
 
-module OperationsEx =
+module Operationsx =
     let (|InsertNode|_|) (op: IOperation) =
         if (!!op.``type``) = "insert_node"
         then Some (op :?> InsertNodeOperation)
@@ -94,7 +94,7 @@ module OperationsEx =
         | SplitNode n -> mapper n
         | _ -> ()
 
-type OperationsEx =
+type Operationsx =
     static member insertNode (path: IPath, node: INode) =
         unbox<InsertNodeOperation> {| ``type`` = "insert_node"; path = path; node = node |}
 

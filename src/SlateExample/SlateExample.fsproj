@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5</TargetFramework>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <RootNamespace>SlateExample</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Slate/Slate.fsproj">
+      <Name>Slate.fsproj</Name>
+    </ProjectReference>
+
+    <ProjectReference Include="../Slatex/Slatex.fsproj">
+        <Name>Slatex.fsproj</Name>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="index.html" />
+    <None Include="paket.references" />
+    <Compile Include="src\Helpers.fs" />
+    <Compile Include="src\Styles.fs" />
+    <Compile Include="src\Icons.fs" />
+    <Compile Include="src\Elements.fs" />
+    <Compile Include="src\Plugins\TransformSplits.fs" />
+    <Compile Include="src\Plugins\Layout.fs" />
+    <Compile Include="src\Examples\BasicExample.fs" />
+    <Compile Include="src\ErrorBoundary.fs" />
+    <Compile Include="src\Layout.fs" />
+    <Compile Include="src/Program.fs" />
+  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>
