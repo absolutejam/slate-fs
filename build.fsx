@@ -17,11 +17,11 @@ module Targets =
 
     Target.initEnvironment ()
 
-    let clientPath = Path.getFullName "./src/SlateExample"
+    let clientPath = Path.getFullName "src/SlateExample"
 
     module Launch =
         let client = async {
-            let cmd = "fable watch . --sourceMaps --typedArrays false --run webpack-dev-server --outDir ./out"
+            let cmd = $"fable watch {clientPath} --sourceMaps --typedArrays false --run webpack-dev-server"
             Tool.dotNet cmd clientPath
         }
 

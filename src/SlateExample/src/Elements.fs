@@ -1,10 +1,9 @@
 module SlateExample.Elements
 
 open Feliz
-open Fable.Core.JsInterop
-
+open Slatex
 open Slate.Types
-open Slate.FSharpExtended
+open Fable.Core.JsInterop
 
 type SectionElement =
     {

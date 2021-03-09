@@ -1,4 +1,4 @@
-module Slate.FSharpExtended
+module Slatex
 
 open Slate.Types
 open Fable.Core.JsInterop

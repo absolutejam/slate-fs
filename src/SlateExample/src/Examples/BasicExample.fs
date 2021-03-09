@@ -13,11 +13,13 @@ open Slate.Operations
 open Slate.Transforms
 open Slate.Operations.OperationTypes
 
-open Slate.FSharpExtended
+open Slatex
 
 open SlateExample.Icons
 open SlateExample.Styles
 open SlateExample.Elements
+open SlateExample.Plugins.Layout
+open SlateExample.Plugins.TransformSplits
 
 let isActive f editor =
     let pred = Nodex.(|Element|_|) >> Option.bind f >> Option.isSome

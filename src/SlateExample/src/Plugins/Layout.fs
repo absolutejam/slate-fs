@@ -8,8 +8,9 @@ open Slate.Element
 open Slate.Operations
 open Slate.Transforms
 open Slate.Operations.OperationTypes
+open FsToolkit.ErrorHandling
 
-open Slate.FSharpExtended
+open Slatex
 
 open SlateExample.Icons
 open SlateExample.Styles

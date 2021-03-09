@@ -12,6 +12,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+const root = resolve('./src/SlateExample');
 var serverPort = process.env.SERVER_PROXY_PORT || 8085;
 var serverHost = (process.env.DOTNET_RUNNING_IN_CONTAINER === true) ? "server" : "localhost";
 var serverUri  = `http://${serverHost}:${serverPort}`;
@@ -19,11 +20,11 @@ var serverUri  = `http://${serverHost}:${serverPort}`;
 var CONFIG = {
     // The tags to include the generated JS and CSS will be automatically injected in the HTML template
     // See https://github.com/jantimon/html-webpack-plugin
-    indexHtmlTemplate: 'index.html',
-    fsharpEntry: 'src/Program.fs.js',
-    cssEntry: 'css/tailwind-source.css',
-    // outputDir: 'out',
-    assetsDir: 'public',
+    indexHtmlTemplate: `${root}/index.html`,
+    fsharpEntry: `${root}/src/Program.fs.js`,
+    cssEntry: `${root}/css/tailwind-source.css`,
+    outputDir: `${root}/out`,
+    assetsDir: `${root}/public`,
     devServerPort: 9091,
     // When using webpack-dev-server, you may need to redirect some calls
     // to a external API server. See https://webpack.js.org/configuration/dev-server/#devserver-proxy
@@ -127,7 +128,10 @@ module.exports = {
         ]),
     resolve: {
         // See https://github.com/fable-compiler/Fable/issues/1490
-        symlinks: false
+        symlinks: false,
+        // modules: [
+        //     path.join(path.resolve(__dirname, '..'), 'Slate/node_modules'),
+        // ],
     },
     // Configuration for webpack-dev-server
     devServer: {

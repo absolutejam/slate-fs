@@ -1,10 +1,11 @@
-module SlateExample.Plugins
+module SlateExample.Plugins.TransformSplits
 
 open Slate.Types
 open Slate.Editor
 open Slate.Transforms
 
-open Slate.FSharpExtended
+open Slatex
+open SlateExample
 open SlateExample.Elements
 open FsToolkit.ErrorHandling
 

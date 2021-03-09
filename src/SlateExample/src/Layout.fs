@@ -15,7 +15,7 @@ let header =
         prop.children [
             Html.div [
                 prop.classes [
-                    tw.``flex``; tw.``m-auto``; tw.``p-4``; tw.``border-b``; tw.``border-rose-800``; tw.``font-header``; tw.``text-2xl``; tw.``text-rose-800``
+                    tw.``flex``; tw.``m-auto``; tw.``p-4``; tw.``border-b-2``; tw.``border-rose-600``; tw.``font-header``; tw.``text-2xl``; tw.``text-rose-600``
                 ]
                 prop.children [
                     Html.h1 [ Html.text "Slate.fs" ]
