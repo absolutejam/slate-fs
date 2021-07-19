@@ -1,4 +1,4 @@
-module Slatex
+namespace Slatex
 
 open Slate.Types
 open Fable.Core.JsInterop
