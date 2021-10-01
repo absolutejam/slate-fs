@@ -20,7 +20,6 @@
     <None Include="index.html" />
     <None Include="paket.references" />
     <Compile Include="src\Helpers.fs" />
-    <Compile Include="src\Styles.fs" />
     <Compile Include="src\Icons.fs" />
     <Compile Include="src\Elements.fs" />
     <Compile Include="src\Plugins\TransformSplits.fs" />
@@ -29,6 +28,8 @@
     <Compile Include="src\ErrorBoundary.fs" />
     <Compile Include="src\Layout.fs" />
     <Compile Include="src/Program.fs" />
+    <Content Include="README.md" />
+    <Content Include="tailwind.config.js" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

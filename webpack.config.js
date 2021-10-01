@@ -13,7 +13,7 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const root = resolve('./src/SlateExample');
-var serverPort = process.env.SERVER_PROXY_PORT || 8085;
+var serverPort = process.env.SERVER_PROXY_PORT || 8089;
 var serverHost = (process.env.DOTNET_RUNNING_IN_CONTAINER === true) ? "server" : "localhost";
 var serverUri  = `http://${serverHost}:${serverPort}`;
 
@@ -25,7 +25,7 @@ var CONFIG = {
     cssEntry: `${root}/css/tailwind-source.css`,
     outputDir: `${root}/out`,
     assetsDir: `${root}/public`,
-    devServerPort: 9091,
+    devServerPort: 9092,
     // When using webpack-dev-server, you may need to redirect some calls
     // to a external API server. See https://webpack.js.org/configuration/dev-server/#devserver-proxy
     devServerProxy: {

@@ -5,17 +5,17 @@ open Feliz
 module Icons =
     let baseIcon (classes: string seq) (viewBox: int * int * int * int) (paths: string seq) =
         Svg.svg [
-            svg.classes ([ tw.``fill-current`` ] @ List.ofSeq classes)
+            svg.classes ([ "fill-current" ] @ List.ofSeq classes)
             svg.viewBox viewBox
             svg.children [ for path in paths -> Svg.path [ svg.d path ]]
         ]
 
     let iconWrapper (width: int) (height: int) icon =
         Html.div [
-            prop.classes [ tw.``flex``; tw.``items-center`` ]
+            prop.classes [ "flex"; "items-center" ]
             prop.children [
                 Html.div [
-                    prop.classes [ tw.``flex``; tw.``align-baseline``; tw.``justify-center`` ]
+                    prop.classes [ "flex"; "align-baseline"; "justify-center" ]
                     prop.style [ style.width width; style.height height ]
                     prop.children [ icon ]
                 ]

@@ -50,50 +50,6 @@ module Operationsx =
         then Some (op :?> SplitNodeOperation)
         else None
 
-    let ifInsertNode op (mapper: _ -> unit) =
-        match op with
-        | InsertNode n -> mapper n
-        | _ -> ()
-
-    let ifInsertText op (mapper: _ -> unit) =
-        match op with
-        | InsertText n -> mapper n
-        | _ -> ()
-
-    let ifMergeNode op (mapper: _ -> unit) =
-        match op with
-        | MergeNode n -> mapper n
-        | _ -> ()
-
-    let ifMoveNode (mapper: _ -> unit) = function
-        | MoveNode n -> mapper n
-        | _ -> ()
-
-    let ifRemoveNode op (mapper: _ -> unit) =
-        match op with
-        | RemoveNode n -> mapper n
-        | _ -> ()
-
-    let ifRemoveText op (mapper: _ -> unit) =
-        match op with
-        | RemoveNode n -> mapper n
-        | _ -> ()
-
-    let ifSetNode op (mapper: _ -> unit) =
-        match op with
-        | SetNode n -> mapper n
-        | _ -> ()
-
-    let ifSetSelection op (mapper: _ -> unit) =
-        match op with
-        | SetSelection n -> mapper n
-        | _ -> ()
-
-    let ifSplitNode op (mapper: _ -> unit) =
-        match op with
-        | SplitNode n -> mapper n
-        | _ -> ()
-
 type Operationsx =
     static member insertNode (path: IPath, node: INode) =
         unbox<InsertNodeOperation> {| ``type`` = "insert_node"; path = path; node = node |}

@@ -4,4 +4,3 @@ group Slate
 group SlateExample
     Feliz.Router
     FsToolkit.ErrorHandling
-    Zanaptak.TypedCssClasses

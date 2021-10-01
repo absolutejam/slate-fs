@@ -128,7 +128,7 @@ module ElementComponents =
     let SectionElement (props: RenderElementProps) =
         Html.div [
             yield! splatElementAttributes props.attributes
-            prop.classes [ tw.``p-3``; tw.``border``; tw.``border-gray-1`` ]
+            prop.classes [ "p-3"; "border"; "border-gray-1" ]
             prop.children [
                 props.children
             ]
@@ -141,8 +141,8 @@ module ElementComponents =
         Html.h2 [
             yield! splatElementAttributes props.attributes
             prop.classes [
-                tw.``text-xl``; tw.``font-medium``; tw.``pt-2``; tw.``pb-4``
-                if el.isPlaceholder then yield! [ tw.``italic``; tw.``text-gray-2`` ]
+                "text-xl"; "font-medium"; "pt-2"; "pb-4"
+                if el.isPlaceholder then yield! [ "italic"; "text-gray-2" ]
             ]
             prop.children [ props.children ]
         ]

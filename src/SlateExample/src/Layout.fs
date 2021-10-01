@@ -3,20 +3,17 @@ module SlateExample.Layout
 open Feliz
 open Slate.Types
 
-open SlateExample.Examples
 open SlateExample.Elements
 open SlateExample.ErrorBoundary
+open SlateExample.Examples.BasicExample
 
+/// Header segment
 let header =
     Html.header [
-        prop.classes [
-            tw.``flex``; tw.``w-full``; tw.``justify-center``; tw.``items-center``; tw.``px-4``
-        ]
+        prop.classes [ "flex"; "w-full"; "justify-center"; "items-center"; "px-4" ]
         prop.children [
             Html.div [
-                prop.classes [
-                    tw.``flex``; tw.``m-auto``; tw.``p-4``; tw.``border-b-2``; tw.``border-rose-600``; tw.``font-header``; tw.``text-2xl``; tw.``text-rose-600``
-                ]
+                prop.classes [ "flex"; "m-auto"; "p-4"; "border-b-2"; "border-rose-600"; "font-header"; "text-2xl"; "text-rose-600" ]
                 prop.children [
                     Html.h1 [ Html.text "Slate.fs" ]
                 ]
@@ -30,20 +27,20 @@ let ErrorComponent () =
         prop.children [ Html.text "It's gone bad" ]
     ]
 
-[<ReactComponent>]
-let Output (props: {| nodes: INode[] |}) =
-    Html.div [
-        prop.classes [ tw.``flex``; tw.``text-xs`` ]
-        prop.children [
-            Html.pre [
-                prop.classes [ tw.``flex``; tw.``p-4`` ]
-                prop.children [
-                    Html.text (Fable.Core.JS.JSON.stringify (props.nodes, space=4))
+type PageComponents =
+    [<ReactComponent>]
+    static member Output (nodes: INode[]) =
+        Html.div [
+            prop.classes [ "flex"; "text-xs" ]
+            prop.children [
+                Html.pre [
+                    prop.classes [ "flex"; "p-4" ]
+                    prop.children [
+                        Html.text (Fable.Core.JS.JSON.stringify (nodes, space=4))
+                    ]
                 ]
             ]
         ]
-    ]
-
 
 [<ReactComponent>]
 let Body () =
@@ -56,19 +53,17 @@ let Body () =
     let nodes, setNodes = React.useState initialState
 
     Html.div [
-        prop.classes [
-            tw.``flex``; tw.``flex-col``; tw.``space-y-4``; tw.``container``; tw.``m-auto``; tw.``items-center``; tw.``p-10``
-        ]
+        prop.classes [ "flex"; "flex-col"; "space-y-4"; "container"; "m-auto"; "items-center"; "p-10" ]
         prop.children [
-            BasicExample.Example {| nodeState = (nodes, setNodes) |}
-            Output {| nodes = nodes |}
+//            Example.Render (nodes = nodes, setNodes = setNodes)
+//            PageComponents.Output (nodes = nodes)
 
-//            (ErrorBoundary {
-//                Inner = BasicExample.Example ()
-//                ErrorComponent = ErrorComponent ()
-//                OnError = fun (exn, info) ->
-//                    Browser.Dom.console.log ("Exception", exn)
-//                    Browser.Dom.console.log ("Info", info)
-//            } :> ReactElement)
+            ErrorBoundary.RenderCatchFn (
+                element = Example.Render (nodes = nodes, setNodes = setNodes),
+                errorHandler = (fun (exn, info) ->
+                    Browser.Dom.console.log ("Exception", exn)
+                    Browser.Dom.console.log ("Info", info)),
+                errorComponent = ErrorComponent ()
+            )
         ]
     ]

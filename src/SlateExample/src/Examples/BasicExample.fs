@@ -16,42 +16,52 @@ open Slate.Operations.OperationTypes
 open Slatex
 
 open SlateExample.Icons
-open SlateExample.Styles
 open SlateExample.Elements
 open SlateExample.Plugins.Layout
 open SlateExample.Plugins.TransformSplits
 
-let isActive f editor =
-    let pred = Nodex.(|Element|_|) >> Option.bind f >> Option.isSome
-    Editor.nodes (editor, match'=pred) |> (not << Seq.isEmpty)
+let activeElementIs f editor =
+    let predicate = Nodex.(|Element|_|) >> Option.bind f >> Option.isSome
+    Editor.nodes (editor, match' = predicate) |> Seq.isEmpty |> not
 
+type Components =
+    [<ReactComponent>]
+    static member Button
+        (
+            style: string,
+            activePredicate: IEditor -> bool,
+            icon: string list -> ReactElement
+        ) =
+        let editor = useSlate ()
+        let isActive = activePredicate editor
 
-[<ReactComponent>]
-let Button (props: {| style: string; activePredicate: IEditor -> bool; icon: string list -> ReactElement |}) =
-    let editor = useSlate ()
-    let isActive = props.activePredicate editor
-    Html.button [
-        prop.classes [ tw.``flex``; tw.``items-center``; tw.``p-2``; tw.``border``; tw.``focus:outline-none``; tw.``border-gray-2`` ]
-        prop.children [
-            props.icon [ if isActive then tw.``text-gray-3`` else tw.``text-gray-2`` ]
-            |> Icons.iconWrapper 16 16
+        Html.button [
+            prop.classes [ "flex"; "items-center"; "p-2"; "border"; "focus:outline-none"; "border-gray-2" ]
+            prop.children [
+                Icons.iconWrapper 16 16 (
+                    icon [ if isActive then "text-gray-3" else "text-gray-2" ]
+                )
+            ]
+            prop.onClick <| fun ev ->
+                ev.preventDefault ()
+                Transforms.setNodes (
+                    editor,
+                    {| elementType = if isActive then ParagraphElement.elementType else TitleElement.elementType |}
+                )
         ]
-        prop.onClick <| fun ev ->
-            ev.preventDefault ()
-            Transforms.setNodes (
-                editor,
-                {| elementType = if isActive then ParagraphElement.elementType else TitleElement.elementType |}
-            )
-    ]
 
-[<ReactComponent>]
-let Toolbar () =
-     Html.div [
-         prop.classes [ tw.``flex``; tw.``w-full``; tw.``space-x-2`` ]
-         prop.children [
-             Button {| style = "title"; icon = Icons.header; activePredicate = isActive Elements.(|TitleElement|_|) |}
+    [<ReactComponent>]
+    static member Toolbar () =
+         Html.div [
+             prop.classes [ "flex"; "w-full"; "space-x-2" ]
+             prop.children [
+                Components.Button (
+                    style = "title",
+                    icon = Icons.header,
+                    activePredicate = activeElementIs Elements.(|TitleElement|_|)
+                )
+             ]
          ]
-     ]
 
 
 let renderElement (props: RenderElementProps) =
@@ -60,47 +70,46 @@ let renderElement (props: RenderElementProps) =
     | Elements.SectionElement _ -> ElementComponents.SectionElement props
     | _                         -> ElementComponents.ParagraphElement props
 
-[<ReactComponent>]
-let Example (props: {| nodeState: INode[] * (INode[] -> unit) |}) =
-    let nodes, setNodes = props.nodeState
+type Example =
+    [<ReactComponent>]
+    static member Render (nodes: INode[], setNodes: INode[] -> unit) =
+        let editor = React.useMemo ((fun () ->
+            createEditor ()
+            |> withReact
+            |> withHistory
+            |> withLayout
+            |> withTransformSplits (fun el -> el.elementType = "title")), [||])
+        let renderElement = React.useCallback (renderElement, [||])
 
-    let editor = React.useMemo ((fun () ->
-        createEditor ()
-        |> withReact
-        |> withHistory
-        |> withLayout
-        |> withTransformSplits (fun el -> el.elementType = "title")), [||])
-    let renderElement = React.useCallback (renderElement, [||])
+        let onKeyDown (ev: KeyboardEvent) =
+            match ev.key, ev.metaKey with
+            | "k", true ->
+                ev.preventDefault ()
+                let isTitle = activeElementIs Elements.(|TitleElement|_|) editor
+                Transforms.setNodes (
+                    editor,
+                    {| elementType = if isTitle then ParagraphElement.elementType else TitleElement.elementType |}
+                )
+            | _ -> ()
 
-    let onKeyDown (ev: KeyboardEvent) =
-        match ev.key, ev.metaKey with
-        | "k", true ->
-            ev.preventDefault ()
-            let isTitle = isActive Elements.(|TitleElement|_|) editor
-            Transforms.setNodes (
-                editor,
-                {| elementType = if isTitle then ParagraphElement.elementType else TitleElement.elementType |}
-            )
-        | _ -> ()
-
-    Html.div [
-        prop.classes [ tw.``flex``; tw.``flex-col``; tw.``space-y-2`` ]
-        prop.style [ style.width 500 ]
-        prop.children [
-            Slate.init [
-                 Slate.editor editor
-                 Slate.value nodes
-                 Slate.onChange setNodes
-                 Slate.children [
-                     Toolbar ()
-                     Slate.editable [
-                         Editable.renderElement renderElement
-                         prop.autoFocus true
-                         prop.classes [ tw.``border``; tw.``border-gray-2``; tw.``p-6`` ]
-                         prop.onKeyDown onKeyDown
+        Html.div [
+            prop.classes [ "flex"; "flex-col"; "space-y-2" ]
+            prop.style [ style.width 500 ]
+            prop.children [
+                Slate.init [
+                     Slate.editor editor
+                     Slate.value nodes
+                     Slate.onChange setNodes
+                     Slate.children [
+                         Components.Toolbar ()
+                         Slate.editable [
+                             Editable.renderElement renderElement
+                             prop.autoFocus true
+                             prop.classes [ "border"; "border-gray-2"; "p-6" ]
+                             prop.onKeyDown onKeyDown
+                         ]
                      ]
-                 ]
+                ]
             ]
         ]
-    ]
 

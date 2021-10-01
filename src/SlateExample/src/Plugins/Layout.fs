@@ -13,7 +13,6 @@ open FsToolkit.ErrorHandling
 open Slatex
 
 open SlateExample.Icons
-open SlateExample.Styles
 open SlateExample.Elements
 
 /// This forces the first element in the editor to be a `title` element, as well as

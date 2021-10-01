@@ -1,9 +1,13 @@
 module SlateExample.ErrorBoundary
 
 open Fable
+open Fable.React
+open SlateExample
 
-type [<AllowNullLiteral>] InfoComponentObject =
+[<AllowNullLiteral>]
+type InfoComponentObject =
     abstract componentStack: string with get
+
 
 type ErrorBoundaryProps =
     {
@@ -13,21 +17,27 @@ type ErrorBoundaryProps =
     }
 
 type ErrorBoundaryState =
-    {
-        HasErrors : bool
-    }
+    { HasErrors : bool }
 
-type ErrorBoundary (props) =
+type ErrorBoundary private (props: ErrorBoundaryProps) =
     inherit React.Component<ErrorBoundaryProps, ErrorBoundaryState>(props)
     do base.setInitState { HasErrors = false }
 
-    override x.componentDidCatch (error, info) =
-        let info = info :?> InfoComponentObject
-        x.props.OnError (error, info)
-        x.setState (fun state props -> { HasErrors = true })
+    override this.componentDidCatch (error, info) =
+        let info = info |> unbox<InfoComponentObject>
+        this.props.OnError (error, info)
+        this.setState (fun state props -> { state with HasErrors = true })
 
-    override x.render () =
-        if (x.state.HasErrors) then
-            x.props.ErrorComponent
+    override this.render () =
+        if this.state.HasErrors then
+            this.props.ErrorComponent
         else
-            x.props.Inner
+            this.props.Inner
+
+    static member RenderCatchFn (element, errorHandler, errorComponent) =
+        React.Helpers.ofType<ErrorBoundary,_,_>
+            {
+                Inner = element
+                ErrorComponent = errorComponent
+                OnError = errorHandler
+            } [||]

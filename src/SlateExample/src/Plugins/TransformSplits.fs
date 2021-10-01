@@ -23,11 +23,13 @@ let withTransformSplits (predicate: IElement -> bool) (editor: IEditor) =
     editor.insertBreak <- fun _ ->
         option {
             let! currentSelection = editor.selection
-            let parent, _ = Editor.parent (editor, at=Location.Path currentSelection.anchor.path)
+            let parent, _ = Editor.parent (editor, at = Location.Path currentSelection.anchor.path)
 
             let! element = Nodex.(|Element|_|) parent
+
             // Bail out if the predicate does not match
             if not (predicate element) then return ()
+
             let! textEl = element.children |> Array.tryHead |> Option.map unbox<IText>
 
             insertBreakOnce ()
@@ -38,9 +40,9 @@ let withTransformSplits (predicate: IElement -> bool) (editor: IEditor) =
                 let newTitleEl = newNode |> unbox<TitleElement>
                 let! newTextEl = newTitleEl.children |> Array.tryHead |> Option.map unbox<IText>
 
-                Transforms.delete (editor, at=Location.Path newNodePath)
-                Transforms.insertNodes (editor, [| Elements.paragraph newTextEl.text |], at=Location.Path newNodePath)
-                Helpers.requestAnimationFrame (fun _ -> Transforms.move (editor, distance=1, unit=PointerUnit.Line))
+                Transforms.delete (editor, at = Location.Path newNodePath)
+                Transforms.insertNodes (editor, [| Elements.paragraph newTextEl.text |], at = Location.Path newNodePath)
+                Helpers.requestAnimationFrame (fun _ -> Transforms.move (editor, distance = 1, unit = PointerUnit.Line))
         }
         |> Option.defaultWith insertBreakOnce
 
